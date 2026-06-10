@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import Navbar from './components/Navbar';
@@ -10,12 +11,14 @@ import ProjectDetails from './pages/ProjectDetails';
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   if (!user) return <Navigate to="/login" />;
   return (
     <div className="flex flex-col h-screen bg-slate-950 font-sans">
-      <Navbar />
+      <Navbar onMenuToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
+        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
         <main className="flex-1 overflow-y-auto">
           {children}
         </main>
