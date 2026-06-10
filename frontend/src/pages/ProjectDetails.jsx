@@ -86,6 +86,15 @@ const ProjectDetails = () => {
     }
   };
 
+  const handleCompleteProject = async () => {
+    try {
+      const data = await put(`/projects/${id}`, { status: 'completed' });
+      setProject(data);
+    } catch (error) {
+      console.error('Failed to complete project', error);
+    }
+  };
+
   const memberUsers = users.filter(u => u.role === 'member');
 
   if (error) {
@@ -120,13 +129,23 @@ const ProjectDetails = () => {
         <ArrowLeft size={20} /> Back to Projects
       </button>
       
-      <div className="bg-slate-800 p-8 rounded-2xl border border-slate-700 mb-8 shadow-lg">
-        <h1 className="text-3xl font-bold text-white mb-2">{project.title}</h1>
-        <p className="text-slate-400 mb-4">{project.description}</p>
-        <div className="flex gap-4 text-sm font-semibold">
-          <span className="text-emerald-400">Status: {project.status}</span>
-          <span className="text-blue-400">Deadline: {project.deadline ? new Date(project.deadline).toLocaleDateString() : 'N/A'}</span>
+      <div className="bg-slate-800 p-8 rounded-2xl border border-slate-700 mb-8 shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">{project.title}</h1>
+          <p className="text-slate-400 mb-4">{project.description}</p>
+          <div className="flex gap-4 text-sm font-semibold">
+            <span className="text-emerald-400">Status: {project.status}</span>
+            <span className="text-blue-400">Deadline: {project.deadline ? new Date(project.deadline).toLocaleDateString() : 'N/A'}</span>
+          </div>
         </div>
+        {user?.role === 'admin' && project.status !== 'completed' && (
+          <button
+            onClick={handleCompleteProject}
+            className="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl font-bold transition-colors shadow-lg shadow-emerald-950/20"
+          >
+            Complete Project
+          </button>
+        )}
       </div>
 
       {(patchError || updateError || deleteError) && (

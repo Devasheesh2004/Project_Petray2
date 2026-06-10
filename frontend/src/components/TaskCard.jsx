@@ -29,7 +29,8 @@ const TaskCard = ({ task, users = [], onStatusChange, onDelete, onAssignChange }
               <select 
                 value={task.assignedTo?._id || task.assignedTo || ''} 
                 onChange={(e) => onAssignChange(task._id, e.target.value)}
-                className="bg-slate-900 text-blue-400 text-xs p-1 pr-6 rounded border border-slate-700 focus:outline-none focus:border-emerald-500 cursor-pointer appearance-none"
+                disabled={task.status === 'completed'}
+                className="bg-slate-900 text-blue-400 text-xs p-1 pr-6 rounded border border-slate-700 focus:outline-none focus:border-emerald-500 cursor-pointer appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <option value="" disabled>Select User</option>
                 {users.map(u => (
@@ -47,7 +48,8 @@ const TaskCard = ({ task, users = [], onStatusChange, onDelete, onAssignChange }
           <select 
             value={task.status} 
             onChange={(e) => onStatusChange(task._id, e.target.value)}
-            className="bg-slate-900 text-slate-300 text-sm p-2 pr-8 rounded-lg border border-slate-700 focus:outline-none focus:border-emerald-500 cursor-pointer appearance-none"
+            disabled={task.status === 'completed'}
+            className="bg-slate-900 text-slate-300 text-sm p-2 pr-8 rounded-lg border border-slate-700 focus:outline-none focus:border-emerald-500 cursor-pointer appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <option value="pending">Pending</option>
             <option value="in-progress">In Progress</option>
@@ -55,7 +57,7 @@ const TaskCard = ({ task, users = [], onStatusChange, onDelete, onAssignChange }
           </select>
           <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
         </div>
-        {onDelete && (
+        {onDelete && task.status !== 'completed' && (
           <button 
             onClick={() => onDelete(task._id)}
             className="text-red-400 hover:text-red-300 transition-colors p-2"

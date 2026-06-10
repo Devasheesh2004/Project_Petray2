@@ -24,8 +24,13 @@ exports.getTasks = async (req, res) => {
 
 exports.updateTask = async (req, res) => {
   try {
-    const task = await Task.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
+    const task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: 'Task not found' });
+    if (task.status === 'completed') {
+      return res.status(400).json({ message: 'Completed tasks cannot be modified' });
+    }
+    Object.assign(task, req.body);
+    await task.save();
     res.json(task);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -34,8 +39,12 @@ exports.updateTask = async (req, res) => {
 
 exports.deleteTask = async (req, res) => {
   try {
-    const task = await Task.findByIdAndDelete(req.params.id);
+    const task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: 'Task not found' });
+    if (task.status === 'completed') {
+      return res.status(400).json({ message: 'Completed tasks cannot be deleted' });
+    }
+    await task.deleteOne();
     res.json({ message: 'Task removed' });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -44,8 +53,13 @@ exports.deleteTask = async (req, res) => {
 
 exports.updateTaskStatus = async (req, res) => {
   try {
-    const task = await Task.findByIdAndUpdate(req.params.id, { status: req.body.status }, { returnDocument: 'after' });
+    const task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: 'Task not found' });
+    if (task.status === 'completed') {
+      return res.status(400).json({ message: 'Completed tasks cannot be modified' });
+    }
+    task.status = req.body.status;
+    await task.save();
     res.json(task);
   } catch (error) {
     res.status(400).json({ message: error.message });
