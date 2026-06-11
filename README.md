@@ -2,6 +2,9 @@
 
 This platform allows team leaders (Admins) and team members (Members) to collaborate seamlessly on projects, assign tasks, update statuses, and visualize project deadlines through a dynamic dashboard.
 
+![alt text](image.png)
+![alt text](image-1.png)
+![alt text](image-2.png)
 ---
 
 ## ✦ Key Features
